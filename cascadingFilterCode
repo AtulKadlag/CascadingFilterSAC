@@ -1,0 +1,52 @@
+1. Create two dropdowns with name as "Dropdown_LocationName" and "Dropdown_SalesManager"
+2. Add below code onInitialization of Canvas
+=========================================================
+
+var LocationDimension = Table_1.getDataSource().getMembers("Location_4nm2e04531");
+
+for(var i=0; i<LocationDimension.length;i++){
+	
+	Dropdown_LocationName.addItem(LocationDimension[i].id,LocationDimension[i].description);
+}
+
+var salesManagername = Table_1.getDataSource().getMembers("Sales_Manager__5w3m5d06b5");
+
+for(i=0; i<salesManagername.length;i++){
+	
+	Dropdown_SalesManager.addItem(salesManagername[i].id,salesManagername[i].description);
+}
+
+=========================================================
+
+3. Add the below code for first dropdown onSelect
+=========================================================
+var sel = Dropdown_LocationName.getSelectedKey();
+Dropdown_SalesManager.removeAllItems();
+Dropdown_SalesManager.addItem("All");
+Dropdown_SalesManager.setSelectedKey("All");
+Table_1.getDataSource().removeDimensionFilter("Sales_Manager__5w3m5d06b5");
+Table_1.getDataSource().setDimensionFilter("Location_4nm2e04531",sel);
+
+var selections= Table_1.getDataSource().getDataSelections({"Location_4nm2e04531":sel});
+
+for (var i=0;i<selections.length;i++){
+	var member = Table_1.getDataSource().getResultMember("Sales_Manager__5w3m5d06b5",selections[i]);
+        Dropdown_SalesManager.addItem(member.id,member.description);	
+}
+
+=========================================================
+
+4. add below code on second dropdown select
+var sel= Dropdown_SalesManager.getSelectedKey();
+
+if(Dropdown_SalesManager.getSelectedKey()!=="All"){
+Table_1.getDataSource().setDimensionFilter("Sales_Manager__5w3m5d06b5",sel);
+	}
+else {
+	Table_1.getDataSource().removeDimensionFilter("Sales_Manager__5w3m5d06b5");
+   Table_1.getDataSource().setDimensionFilter("Location_4nm2e04531",Dropdown_LocationName.getSelectedKey());
+}
+
+
+
+
